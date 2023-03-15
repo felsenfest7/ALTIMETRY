@@ -624,14 +624,14 @@ def idw(df):
     df['month_year'] = df['cdate_t'].dt.to_period('M')
 
     #Diğer düzeltmeler
-    dx = df[["cdate_t", "glat.00", "glon.00", "distance.00", "ssh.55", "mssh.05", "weight", "month_year"]].copy()
+    dx = df[["cdate_t", "glat.00", "glon.00", "distance.00", "ssh_wgs84", "mssh.05", "weight", "month_year"]].copy()
     dx.reset_index(inplace = True)
     dx.drop(["time"], axis = 1, inplace = True)
     dx.set_index("month_year", inplace = True)
 
     #IDW ve diğer değerlerin hesabı
-    dx["ssh_idw"] = dx.groupby("month_year").apply(lambda df: (df["ssh.55"] * df["weight"]).sum() / df["weight"].sum())
-    dx["ssh.55"] = dx.groupby("month_year").apply(lambda df: df["ssh.55"].mean())
+    dx["ssh_wgs84"] = dx.groupby("month_year").apply(lambda df: (df["ssh_wgs84"] * df["weight"]).sum() / df["weight"].sum())
+    dx["ssh.55"] = dx.groupby("month_year").apply(lambda df: df["ssh_wgs84"].mean())
     dx["mssh.05"] = dx.groupby("month_year").apply(lambda df: df["mssh.05"].mean())
     dx["glat.00"] = dx.groupby("month_year").apply(lambda df: df["glat.00"].mean())
     dx["glon.00"] = dx.groupby("month_year").apply(lambda df: df["glon.00"].mean())
@@ -758,7 +758,7 @@ def df2excel_ssh(df, mode, station_name, station_name_mode):
         output: excel table
     """
 
-    path = f"/home/furkan/deus/ALTIMETRY/processler/{mode}/{station_name}/{station_name_mode}.xlsx"
+    path = f"/home/furkan/deus/ALTIMETRY/processler/{mode}/{station_name}/YENİ/{station_name_mode}.xlsx"
     table = df.to_excel(path)
     return table
 
@@ -802,3 +802,66 @@ def interpolation_ales(df):
 
 
     #method = "polynomial", order = 3
+
+def index_sec(df, index_num):
+    """
+        --> Herhangi bir dataframe'in indexsinin seçilmesi için kullanılmaktadır.
+
+        input: df
+        output: df
+    """
+
+    if index_num == 0:
+        yeni_df = df.iloc[df.index == 0]
+        return yeni_df
+
+    elif index_num == 1:
+        yeni_df = df.iloc[df.index == 1]
+        return yeni_df
+
+    elif index_num == 2:
+        yeni_df = df.iloc[df.index == 2]
+        return yeni_df
+
+    elif index_num == 3:
+        yeni_df = df.iloc[df.index == 3]
+        return yeni_df
+
+    elif index_num == 4:
+        yeni_df = df.iloc[df.index == 4]
+        return yeni_df
+
+    elif index_num == 5:
+        yeni_df = df.iloc[df.index == 5]
+        return yeni_df
+
+    elif index_num == 6:
+        yeni_df = df.iloc[df.index == 6]
+        return yeni_df
+
+    elif index_num == 7:
+        yeni_df = df.iloc[df.index == 7]
+        return yeni_df
+
+    elif index_num == 8:
+        yeni_df = df.iloc[df.index == 8]
+        return yeni_df
+
+    elif index_num == 9:
+        yeni_df = df.iloc[df.index == 9]
+        return yeni_df
+
+    elif index_num == 10:
+        yeni_df = df.iloc[df.index == 10]
+        return yeni_df
+
+    elif index_num == 11:
+        yeni_df = df.iloc[df.index == 11]
+        return yeni_df
+
+    elif index_num == 12:
+        yeni_df = df.iloc[df.index == 12]
+        return yeni_df
+
+    else:
+        print("ERROR")

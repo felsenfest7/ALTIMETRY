@@ -320,7 +320,7 @@ def plot_sla_yillik(df, title):
     #Plotun çizdirilmesi
     fig, ax = plt.subplots()
     ax.locator_params(integer=True)
-    ax.plot(dff["cdate_t"], dff["sla"], "royalblue", label="Deniz Seviyesi Anomalisi")
+    ax.plot(dff["cdate_t"], dff["ssh.55"], "royalblue", label="Deniz Seviyesi Anomalisi")
 
     # Geriye kalan bilgiler. Bu kodun bitimi ile ssh plotu çizimi biter.
     ax.set_xlabel("Yıl", fontsize=13)

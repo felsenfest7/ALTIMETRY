@@ -21,6 +21,7 @@ from matplotlib.ticker import FormatStrFormatter
 import read_merge_nc as rmn
 from dateutil.relativedelta import relativedelta
 import math as m
+import geopy.distance
 
 #PLOTLARIN ÇİZİMİ
 #-----------------------------------------------------------------------------------------------------------------------
@@ -90,7 +91,7 @@ def plot_ssh_aylikv2(df_lrm, df_sar, title):
     plt.title(title)
     plt.show()
 
-def iki_df_ssh_plot(df1, df2, df3, df4, title):
+def iki_df_ssh_plot(df1, df3, df4, title):
     """
             --> İki farklı SSH df'inin plotunu çizdirmeyi sağlar.
             --> df1: ales LRM, df2: ales SAR, df3: geleneksel LRM, df4: geleneksel SAR
@@ -98,21 +99,18 @@ def iki_df_ssh_plot(df1, df2, df3, df4, title):
 
     # İlk önce cdate_t değerleri indexe gittiği için ve çizilirken sorun yaşandığı için index resetlenir
     dfx1 = df1.reset_index()
-    dfx2 = df2.reset_index()
     dfx3 = df3.reset_index()
     dfx4 = df4.reset_index()
 
     # Ardından dfx çizdirilirken sorun verdiği için dff diye yeni bir dataframe e kopyalanır
     dff1 = dfx1
-    dff2 = dfx2
     dff3 = dfx3
     dff4 = dfx4
 
     # Plotun çizdirilmesi
     fig, ax = plt.subplots()
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-    ax.plot_date(dff1["cdate_t"], dff1["ssh_idw"], "#9b19f5", label="ALES LRM")
-    ax.plot_date(dff2["cdate_t"], dff2["ssh_idw"], "#0bb4ff", label="ALES SAR")
+    ax.plot_date(dff1["cdate_t"], dff1["ssh_idw"], "#9b19f5", label="ALES")
     ax.plot_date(dff3["cdate_t"], dff3["ssh_idw"], "#e60049", label="Altimetri LRM")
     ax.plot_date(dff4["cdate_t"], dff4["ssh_idw"], "#00bfa0", label="Altimetri SAR")
 
@@ -159,13 +157,56 @@ def plot_ssh_aylik_yeni(df_lrm, title):
     plt.title(title)
     plt.show()
 
+def plot_xtrack(df1, df2, title):
 
+    # df çizdirilirken sorun verdiği için dff diye yeni bir dataframe e kopyalanır
+    dff1 = df1
+    dff2 = df2
 
+    dff1.reset_index(inplace = True)
+    dff2.reset_index(inplace=True)
 
+    dff1 = dff1[dff1["cdate_t"] > "2003-05-14"]
+    dff2 = dff2[dff2["cdate_t"] > "2003-05-14"]
 
+    # Plotun çizdirilmesi
+    fig, ax = plt.subplots()
+    ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+    ax.plot_date(dff1["cdate_t"], dff1["ssh"], "#27aeef", label="XTRACK LRM Verileri")
+    ax.plot_date(dff2["cdate_t"], dff2["ssh"], "#0d88e6", label="XTRACK SAR Verileri")
 
+    # Year-Month bilgileri için MonthLocator kullanılmalı
+    ax.xaxis.set_major_locator(MonthLocator(interval=12))
+    # Burada ise verinin veri tipinin formatı girilmeli
+    ax.fmt_xdata = DateFormatter('% Y-% m-% d')
+    ax.set_xlabel("Tarih (Yıl-Ay)", fontsize=13)
+    ax.set_ylabel("Ortalama Aylık Deniz Seviyesi Yüksekliği (m)", fontsize=13)
+    ax.legend(loc="best")
+    plt.grid(True)
+    plt.title(title)
+    plt.show()
 
+def distance_plot(df, ist_enlem, ist_boylam, ort_enlem, ort_boylam, title):
 
+    ort_koordinatlar = (ort_enlem, ort_boylam)
+    ist_koordinatlar = (ist_enlem, ist_boylam)
+
+    distancex = geopy.distance.distance(ort_koordinatlar, ist_koordinatlar).km
+
+    fig = plt.figure()
+    ax = fig.add_subplot(projection = "3d")
+
+    ax.scatter(df["glat.00"], df["glon.00"], df["distance.00"], label = "Altimetri Verileri")
+    ax.scatter(ort_enlem, ort_boylam, distancex, c = "#ff7f0e", marker = "^", label = "Ortalama Koordinat")
+
+    ax.set_xlabel('Enlem')
+    ax.set_ylabel('Boylam')
+    ax.set_zlabel('Kıyıya uzaklık (km)')
+    ax.set_title(f"{title} Altimetri Verilerinin Kıyıya Olan Uzaklıkları")
+
+    plt.legend(loc="best")
+
+    plt.show()
 
 
 

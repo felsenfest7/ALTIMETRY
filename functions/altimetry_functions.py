@@ -254,7 +254,6 @@ def idw(df):
     dx["glat.00"] = dx.groupby("month_year").apply(lambda df: df["glat.00"].mean())
     dx["glon.00"] = dx.groupby("month_year").apply(lambda df: df["glon.00"].mean())
     dx["cdate_t"] = dx.groupby("month_year").apply(lambda df: df["cdate_t"].mean())
-    dx["mssh05_idw"] = dx.groupby("month_year").apply(lambda df: (df["mssh.05"] * df["weight"]).sum() / df["weight"].sum())
     dx["distance.00"] = dx.groupby("month_year").apply(lambda df: df["distance.00"].mean())
 
     dx.reset_index(inplace = True)
@@ -307,8 +306,18 @@ def ales_sla_filter(df):
     df_result = df[df["sla"] < 0.6]
     df_result = df_result[df_result["sla"] > -0.6]
     return df_result
+#-----------------------------------------------------------------------------------------------------------------------
 
+def iqr(df):
 
+    Q1 = df["ssh_idw"].quantile(0.25)
+    Q3 = df["ssh_idw"].quantile(0.75)
+
+    IQR = Q3 - Q1
+
+    filtered = df.query('(@Q1 - 1.5 * @IQR) <= ssh_idw <= (@Q3 + 1.5 * @IQR)')
+
+    return filtered
 
 
 
