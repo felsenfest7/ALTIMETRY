@@ -27,7 +27,18 @@ lrm_dataset_aylik = xf.aylik(lrm_dataset)
 #IQR HESABI
 filtered = xf.iqr_xtrack(lrm_dataset_aylik)
 
+#Ufak noiseların yok edilmesi gerekmekte
+filtered = filtered[filtered["ssh"] > 39.60]
+filtered = filtered[filtered["ssh"] < 39.90]
+
 #Dates interpolation
 filtered = xf.dates_interpolation_xtrack(filtered)
 
+#Plotun çizdirilmesi
 plot = xp.plot_xtrack(filtered, "Gökçeada X-TRACK Verileri", "2008-01-01")
+
+#nx3'lük matrisin oluşturulması
+wish = xf.df2newdf_xtrack(filtered)
+
+#Excele aktarılması
+wish_table = xf.df2excel_xtrack(wish, "XTRACK", "GOKCEADA", "gokceada_ssh_weight.xlsx")

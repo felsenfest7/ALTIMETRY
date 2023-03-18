@@ -34,6 +34,11 @@ filtered = filtered[filtered["ssh"] < 23.70]
 #Dates interpolation
 filtered = xf.dates_interpolation_xtrack(filtered)
 
-#plot = xp.plot_xtrack(filtered, "Marmaris X-TRACK Verileri", "2008-01-01")
+#Plotun çizdirilmesi
+plot = xp.plot_xtrack(filtered, "Marmaris X-TRACK Verileri", "2008-01-01")
 
-print(filtered)
+#nx3'lük matrisin oluşturulması
+wish = xf.df2newdf_xtrack(filtered)
+
+#Excele aktarılması
+wish_table = xf.df2excel_xtrack(wish, "XTRACK", "MARMARİS", "marmaris_ssh_weight.xlsx")

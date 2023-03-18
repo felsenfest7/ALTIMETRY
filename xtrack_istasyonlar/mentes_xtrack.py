@@ -27,7 +27,18 @@ lrm_dataset_aylik = xf.aylik(lrm_dataset)
 #IQR HESABI
 filtered = xf.iqr_xtrack(lrm_dataset_aylik)
 
+#Ufak noiseların yok edilmesi gerekmekte
+filtered = filtered[filtered["ssh"] > 38.00]
+filtered = filtered[filtered["ssh"] < 38.40]
+
 #Dates interpolation
 filtered = xf.dates_interpolation_xtrack(filtered)
 
+#Plotun çizdirilmesi
 plot = xp.plot_xtrack(lrm_dataset_aylik, "Menteş X-TRACK Verileri", "2002-01-01")
+
+#nx3'lük matrisin oluşturulması
+wish = xf.df2newdf_xtrack(filtered)
+
+#Excele aktarılması
+wish_table = xf.df2excel_xtrack(wish, "XTRACK", "MENTES", "mentes_ssh_weight.xlsx")
