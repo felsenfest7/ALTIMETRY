@@ -108,7 +108,7 @@ def iqr_xtrack(df):
     filtered = df.query('(@Q1 - 1.5 * @IQR) <= ssh <= (@Q3 + 1.5 * @IQR)')
 
     return filtered
-
+#-----------------------------------------------------------------------------------------------------------------------
 def dates_interpolation_xtrack(df):
     """
         --> Aylara göre interpolasyon yapar.
@@ -127,6 +127,64 @@ def dates_interpolation_xtrack(df):
           .fillna(np.nan))   #0 dı bu
 
     return df
+#-----------------------------------------------------------------------------------------------------------------------
+def df2newdf_xtrack(df):
+
+    """
+        --> İçine atılan df'in columnlarının yalnızca bir kısmının kullanılması için oluşturulan dataframe.
+        --> Ekstra bir hesap yaparak yeni bir columnda oluşturmayı hedeflemiştir.
+
+        input: df
+        output: df
+    """
+
+    df2 = df.reset_index()
+    df3 = df2[["cdate_t", "ssh"]].copy()
+
+    # YYYY.MM biriminde hesaplamaya yapabilmek için yapılan hesaplamalar
+    new_date = []
+    for i in df3["cdate_t"]:
+        new_date.append(i.year + ((i.month - 0.5) / 12))
+
+    # Elde edilen değerlerin virgülden sonra çok hanesi olduğu için formatlanması gerekmekte
+    formatting = ["%.4f" % i for i in new_date]
+
+    # Elde edilen listenin df'e eklenmesi
+    df3["date"] = formatting
+
+    # Eski cdate_t columnu burada elimine edilerek yeni elde edilen column index olarak atandı
+    df3 = df3.drop(["cdate_t"], axis=1)
+    df3.set_index("date", inplace=True)
+
+    # SSH columnunun isminin değiştirilmesi (ileride karşılaştırma yaparken işe yarar diye)
+    df3.rename(columns={"ssh": "ssh_xtrack"}, inplace=True)
+
+    # Ağırlık column'unun oluşturulması
+    df3["weight"] = 1
+
+    return df3
+#-----------------------------------------------------------------------------------------------------------------------
+def df2excel_xtrack(df, mode, station_name, station_name_mode):
+
+    """
+        --> Herhangi bir dataframe'in excele çevrilmesini sağlar.
+        --> Mod ve station name bilgileri verinin pathi için gereklidir.
+
+        input: df
+        output: excel table
+    """
+
+    path = f"/home/furkan/deus/ALTIMETRY/processler/{mode}/ISTASYONLAR/{station_name}/{station_name_mode}.xlsx"
+    table = df.to_excel(path)
+    return table
+
+
+
+
+
+
+
+
 
 
 

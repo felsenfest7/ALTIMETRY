@@ -318,14 +318,56 @@ def iqr(df):
     filtered = df.query('(@Q1 - 1.5 * @IQR) <= ssh_idw <= (@Q3 + 1.5 * @IQR)')
 
     return filtered
+#-----------------------------------------------------------------------------------------------------------------------
 
+def df2newdf(df):
 
+    """
+        --> İçine atılan df'in columnlarının yalnızca bir kısmının kullanılması için oluşturulan dataframe.
+        --> Ekstra bir hesap yaparak yeni bir columnda oluşturmayı hedeflemiştir.
 
+        input: df
+        output: df
+    """
+    #Bazı ihtiyaç duyulmayan columnların droplanması
+    df2 = df.drop(["glat.00", "glon.00", "distance.00", "mssh.05", "weight", "ssh.55"], axis = 1)
 
+    #YYYY.MM biriminde hesaplamaya yapabilmek için yapılan hesaplamalar
+    new_date = []
+    for i in df2["cdate_t"]:
+        new_date.append(i.year + ((i.month - 0.5)/12))
 
+    #Elde edilen değerlerin virgülden sonra çok hanesi olduğu için formatlanması gerekmekte
+    formatting = ["%.4f" % i for i in new_date]
 
+    #Elde edilen listenin df'e eklenmesi
+    df2["date"] = formatting
 
+    #Eski cdate_t columnu burada elimine edilerek yeni elde edilen column index olarak atandı
+    df2 = df2.drop(["cdate_t"], axis = 1)
+    df2.set_index("date", inplace = True)
 
+    #SSH columnunun isminin değiştirilmesi (ileride karşılaştırma yaparken işe yarar diye)
+    df2.rename(columns = {"ssh_idw" : "ssh_ales"}, inplace = True)
+
+    #Ağırlık column'unun oluşturulması
+    df2["weight"] = 1
+
+    return df2
+
+def df2excel3(df, mode, station_name, station_name_mode):
+
+    """
+        --> Herhangi bir dataframe'in excele çevrilmesini sağlar.
+        --> Mod ve station name bilgileri verinin pathi için gereklidir.
+
+        input: df
+        output: excel table
+    """
+
+    path = f"/home/furkan/deus/ALTIMETRY/processler/{mode}/{station_name}/{station_name_mode}.xlsx"
+    table = df.to_excel(path)
+    return table
 
 
 
