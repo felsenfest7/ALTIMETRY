@@ -144,7 +144,7 @@ def plot_ssh_aylik_yeni(df_lrm, title):
     #Plotun çizdirilmesi
     fig, ax = plt.subplots()
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-    ax.plot_date(dff_lrm["cdate_t"], dff_lrm["ssh_idw"], "#0d88e6", label="ALES Verileri")
+    ax.plot_date(dff_lrm["cdate_t"], dff_lrm["ssh_idw"], "#0d88e6", label="SAR Verileri")
 
     # Year-Month bilgileri için MonthLocator kullanılmalı
     ax.xaxis.set_major_locator(MonthLocator(interval=12))

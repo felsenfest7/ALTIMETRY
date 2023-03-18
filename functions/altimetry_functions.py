@@ -319,7 +319,6 @@ def iqr(df):
 
     return filtered
 #-----------------------------------------------------------------------------------------------------------------------
-
 def df2newdf(df):
 
     """
@@ -354,7 +353,7 @@ def df2newdf(df):
     df2["weight"] = 1
 
     return df2
-
+#-----------------------------------------------------------------------------------------------------------------------
 def df2excel3(df, mode, station_name, station_name_mode):
 
     """
@@ -368,7 +367,42 @@ def df2excel3(df, mode, station_name, station_name_mode):
     path = f"/home/furkan/deus/ALTIMETRY/processler/{mode}/{station_name}/{station_name_mode}.xlsx"
     table = df.to_excel(path)
     return table
+#-----------------------------------------------------------------------------------------------------------------------
+def df2newdf_gel(df):
 
+    """
+        --> İçine atılan df'in columnlarının yalnızca bir kısmının kullanılması için oluşturulan dataframe.
+        --> Ekstra bir hesap yaparak yeni bir columnda oluşturmayı hedeflemiştir.
+        --> SENTINEL 3A SAR VERİLERİ İÇİN OLUŞTURULDU
+
+        input: df
+        output: df
+    """
+    #Bazı ihtiyaç duyulmayan columnların droplanması
+    df2 = df.drop(["glat.00", "glon.00", "ssh.40", "weight"], axis = 1)
+
+    #YYYY.MM biriminde hesaplamaya yapabilmek için yapılan hesaplamalar
+    new_date = []
+    for i in df2["cdate_t"]:
+        new_date.append(i.year + ((i.month - 0.5)/12))
+
+    #Elde edilen değerlerin virgülden sonra çok hanesi olduğu için formatlanması gerekmekte
+    formatting = ["%.4f" % i for i in new_date]
+
+    #Elde edilen listenin df'e eklenmesi
+    df2["date"] = formatting
+
+    #Eski cdate_t columnu burada elimine edilerek yeni elde edilen column index olarak atandı
+    df2 = df2.drop(["cdate_t"], axis = 1)
+    df2.set_index("date", inplace = True)
+
+    #SSH columnunun isminin değiştirilmesi (ileride karşılaştırma yaparken işe yarar diye)
+    df2.rename(columns = {"ssh_idw" : "ssh_sar"}, inplace = True)
+
+    #Ağırlık column'unun oluşturulması
+    df2["weight"] = 1
+
+    return df2
 
 
 
