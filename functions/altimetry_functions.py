@@ -343,7 +343,7 @@ def df2newdf(df):
     df2["date"] = formatting
 
     #Eski cdate_t columnu burada elimine edilerek yeni elde edilen column index olarak atandı
-    df2 = df2.drop(["cdate_t"], axis = 1)
+    #df2 = df2.drop(["cdate_t"], axis = 1)
     df2.set_index("date", inplace = True)
 
     #SSH columnunun isminin değiştirilmesi (ileride karşılaştırma yaparken işe yarar diye)
@@ -351,6 +351,9 @@ def df2newdf(df):
 
     #Ağırlık column'unun oluşturulması
     df2["weight"] = 1
+
+    df2.reset_index(inplace = True)
+    df2.rename_axis("ay", inplace = True)
 
     return df2
 #-----------------------------------------------------------------------------------------------------------------------
@@ -393,14 +396,17 @@ def df2newdf_gel(df):
     df2["date"] = formatting
 
     #Eski cdate_t columnu burada elimine edilerek yeni elde edilen column index olarak atandı
-    df2 = df2.drop(["cdate_t"], axis = 1)
+    #df2 = df2.drop(["cdate_t"], axis = 1)
     df2.set_index("date", inplace = True)
 
     #SSH columnunun isminin değiştirilmesi (ileride karşılaştırma yaparken işe yarar diye)
-    df2.rename(columns = {"ssh_idw" : "ssh_sar"}, inplace = True)
+    df2.rename(columns = {"ssh_idw" : "ssh_ales"}, inplace = True)
 
     #Ağırlık column'unun oluşturulması
     df2["weight"] = 1
+
+    df2.reset_index(inplace=True)
+    df2.rename_axis("ay", inplace=True)
 
     return df2
 

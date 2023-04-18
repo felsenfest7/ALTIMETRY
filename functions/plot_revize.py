@@ -208,7 +208,33 @@ def distance_plot(df, ist_enlem, ist_boylam, ort_enlem, ort_boylam, title):
 
     plt.show()
 
+def corr_ssh(df, title, mss):
+    """
+        --> Dengelenmiş SSH değerlerinin çizdirilmesi için.
+    """
+    # df çizdirilirken sorun verdiği için dff diye yeni bir dataframe e kopyalanır
+    dff = df
 
+    # Nan değerlerinin alınmaması
+    dff = dff[dff["SSH"].notna()]
+
+    # Plotun çizdirilmesi
+    fig, ax = plt.subplots()
+    ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+    ax.plot_date(dff["cdate_t"], dff["SSH"], "#0d88e6", label="SSH Verileri")
+
+    ax.axhline(y = mss, c = "red", label = "MSS")
+
+    # Year-Month bilgileri için MonthLocator kullanılmalı
+    ax.xaxis.set_major_locator(MonthLocator(interval=12))
+    # Burada ise verinin veri tipinin formatı girilmeli
+    ax.fmt_xdata = DateFormatter('% Y-% m-% d')
+    ax.set_xlabel("Tarih (Yıl-Ay)", fontsize=13)
+    ax.set_ylabel("Ortalama Aylık Deniz Seviyesi Yüksekliği (m)", fontsize=13)
+    ax.legend(loc="best")
+    plt.grid(True)
+    plt.title(title)
+    plt.show()
 
 
 

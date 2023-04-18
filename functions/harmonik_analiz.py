@@ -6,82 +6,11 @@ from numpy.linalg import inv
 import sys
 import numpy
 numpy.set_printoptions(threshold=sys.maxsize)
+sys.path.insert(1, "/home/furkan/PycharmProjects/pythonProject/venv/ALTIMETRY_PY/GENEL_DOSYALAR")
+import altimetry_functions as af
+import plot_revize as pr
 
-"""
-def harmonik_analiz(df):
-
-    #FONKSİYONEL MODEL
-    #Ağırlık matrisinin oluşturulması (numpy array şeklinde)
-    boyut = df.shape[0]
-    p = np.diag(np.full(boyut, 1))
-
-    #l matrisinin çekilmesi ve numpy arrayine döndürülmesi
-    l = df[["ssh_ales"]]
-    l.fillna(0, inplace = True) # NaN valuelar matris çarpımında hata verdiği için 0 olarak değiştirildi
-    l = l.to_numpy()
-
-    #A matrisinin oluşturulması
-    zaman_farkı = df.index[-1]
-
-    #Solar semiannual parametreleri
-    cos_radyan_ssa = m.cos((2 * m.pi * 6.00420752964) / 6)
-    sin_radyan_ssa = m.sin((2 * m.pi * 6.00420752964) / 6)
-
-    # Solar annual parametreleri
-    cos_radyan_sa = m.cos((2 * m.pi * 12.0084151963) / 12)
-    sin_radyan_sa = m.sin((2 * m.pi * 12.0084151963) / 12)
-
-    row = [1, zaman_farkı, cos_radyan_ssa, sin_radyan_ssa, cos_radyan_sa, sin_radyan_sa]
-
-    arr = np.array(row)
-    A = np.tile(arr, (boyut, 1)) #A matrisi
-    A_transpose = np.transpose(A)
-
-    #Dengeleme hesabı
-    ##N matrisi
-    N = np.matmul(A_transpose, p)
-    N = np.matmul(N, A)
-
-    ##N'nin tersi
-    N_ters = inv(N)
-
-    ##n matrisi
-    n = np.matmul(A_transpose, p)
-    n = np.matmul(n, l)
-
-    #x matrisi
-    x = np.matmul(N_ters, n)
-
-    #Düzeltmelerin hesaplanması
-    #v = Ax - l
-
-    Ax = np.matmul(A, x)
-    v = Ax - l  #düzeltmeler
-
-    np.place(v, v > 20, 0)  #bazı veriler doğal olarak hatalı geliyor (Nanlar yüzünden). Bunları 0'la değiştirildi.
-
-    #STOKASTİK MODEL
-    ##Varyansın hesabı
-
-    v_transpose = np.transpose(v)
-
-    vtp = np.matmul(v_transpose, p)
-    vtpv = np.matmul(vtp, v)    #Pvv
-
-    n = boyut   #bilinenler
-    mx = 6      #bilinmeyenler
-    f = n - mx  #serbestlik derecesi
-
-    varyans = vtpv / f  #metre kare
-    stdv = m.sqrt(varyans) #metre
-
-    #Varyans kovaryans matrisinin oluşturulması
-    Cxx = varyans * N_ters  #varyans kovaryans matrisi
-
-    print(x)
-"""
-
-def harmonik_analiz2(df):
+def harmonik_analiz2(df, title):
 
     #NaN olan verilerin droplanması
     df.dropna(inplace = True)
@@ -167,7 +96,27 @@ def harmonik_analiz2(df):
     #Trend
     ##Trend b1*t olarak ifade edilen değer.
 
-    print(x)
+
+
+    #Düzeltilmiş SSH verilerinin excele aktarılması ve plotta çizdirilmesi
+    dateler = df[["cdate_t"]]
+    corr_ssh = pd.DataFrame(l_artı_v, columns=['SSH'])
+
+    dateler.reset_index(inplace = True)
+    dateler.drop(columns=["ay"], inplace=True)
+
+    df_merged = dateler.join(corr_ssh)  #Date ve CORR SSH değerlerinin tek dfte bulunduğu durum
+
+    #Elde edilen df_merged'ün NaN boş aylarını interpole etmek
+    df_merged = af.dates_interpolation(df_merged)
+
+    #Plotun çizdirilmesi
+    mss = x[0]  #Mean Sea Surface (m) biriminde ama array halinde
+    mss = mss[0]  #Burada ise float halinde
+    mss = mss.round(3)  #metre
+
+    plot = pr.corr_ssh(df_merged, f"{title} Altimetri Verileri", mss)
+
 
 
 
