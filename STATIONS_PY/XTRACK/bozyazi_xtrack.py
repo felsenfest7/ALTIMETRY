@@ -12,6 +12,7 @@ sys.path.insert(1, "/home/furkan/PycharmProjects/pythonProject/venv/ALTIMETRY_PY
 
 import xtrack_functions as xf
 import xtrack_plot as xp
+import harmonik_analiz as ha
 
 desired_width=320
 pd.set_option('display.width', desired_width)
@@ -35,10 +36,13 @@ filtered = filtered[filtered["ssh"] < 26.70]
 filtered = xf.dates_interpolation_xtrack(filtered)
 
 #Plotun çizdirilmesi
-plot = xp.plot_xtrack(filtered, "Bozyazı X-TRACK Verileri", "2008-08-01")
+#plot = xp.plot_xtrack(filtered, "Bozyazı X-TRACK Verileri", "2008-08-01")
 
 #nx3'lük matrisin oluşturulması
-wish = xf.df2newdf_xtrack(filtered)
+wish = xf.df2newdf_xtrack(filtered, "2008-08-01")
 
 #Excele aktarılması
 wish_table = xf.df2excel_xtrack(wish, "XTRACK", "BOZYAZI", "bozyazi_ssh_weight.xlsx")
+
+haa = ha.harmonik_analiz2(wish, "Bozyazı X-TRACK")
+print(haa)

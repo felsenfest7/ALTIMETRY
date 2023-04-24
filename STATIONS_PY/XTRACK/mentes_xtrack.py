@@ -12,6 +12,7 @@ sys.path.insert(1, "/home/furkan/PycharmProjects/pythonProject/venv/ALTIMETRY_PY
 
 import xtrack_functions as xf
 import xtrack_plot as xp
+import harmonik_analiz as ha
 
 desired_width=320
 pd.set_option('display.width', desired_width)
@@ -38,7 +39,10 @@ filtered = xf.dates_interpolation_xtrack(filtered)
 plot = xp.plot_xtrack(lrm_dataset_aylik, "Menteş X-TRACK Verileri", "2002-01-01")
 
 #nx3'lük matrisin oluşturulması
-wish = xf.df2newdf_xtrack(filtered)
+wish = xf.df2newdf_xtrack(filtered, "2002-01-01")
 
 #Excele aktarılması
 wish_table = xf.df2excel_xtrack(wish, "XTRACK", "MENTES", "mentes_ssh_weight.xlsx")
+
+haa = ha.harmonik_analiz2(wish, "Menteş X-TRACK")
+print(haa)
