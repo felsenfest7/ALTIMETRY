@@ -128,7 +128,7 @@ def dates_interpolation_xtrack(df):
 
     return df
 #-----------------------------------------------------------------------------------------------------------------------
-def df2newdf_xtrack(df):
+def df2newdf_xtrack(df, station_date):
 
     """
         --> İçine atılan df'in columnlarının yalnızca bir kısmının kullanılması için oluşturulan dataframe.
@@ -153,14 +153,18 @@ def df2newdf_xtrack(df):
     df3["date"] = formatting
 
     # Eski cdate_t columnu burada elimine edilerek yeni elde edilen column index olarak atandı
-    df3 = df3.drop(["cdate_t"], axis=1)
+    #df3 = df3.drop(["cdate_t"], axis=1)
+    df3 = df3[df3["cdate_t"] > station_date]
     df3.set_index("date", inplace=True)
 
     # SSH columnunun isminin değiştirilmesi (ileride karşılaştırma yaparken işe yarar diye)
-    df3.rename(columns={"ssh": "ssh_xtrack"}, inplace=True)
+    df3.rename(columns={"ssh": "ssh_ales"}, inplace=True)
 
     # Ağırlık column'unun oluşturulması
     df3["weight"] = 1
+
+    df3.reset_index(inplace=True)
+    df3.rename_axis("ay", inplace=True)
 
     return df3
 #-----------------------------------------------------------------------------------------------------------------------
