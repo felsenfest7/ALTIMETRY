@@ -208,7 +208,7 @@ def distance_plot(df, ist_enlem, ist_boylam, ort_enlem, ort_boylam, title):
 
     plt.show()
 
-def corr_ssh(df, title, mss):
+def corr_ssh(df, title, mss, trend):
     """
         --> Dengelenmiş SSH değerlerinin çizdirilmesi için.
     """
@@ -216,14 +216,17 @@ def corr_ssh(df, title, mss):
     dff = df
 
     # Nan değerlerinin alınmaması
-    dff = dff[dff["SSH"].notna()]
+    dff = dff[dff["SSH_ilk"].notna()]
+    dff = dff[dff["SSH_model"].notna()]
 
     # Plotun çizdirilmesi
     fig, ax = plt.subplots()
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-    ax.plot_date(dff["cdate_t"], dff["SSH"], "#0d88e6", label="SSH Verileri")
+    ax.plot_date(dff["cdate_t"], dff["SSH_ilk"], "#FFBF00", label="Model Öncesi SSH Verileri")
+    ax.plot_date(dff["cdate_t"], dff["SSH_model"], "#0d88e6", label="Model Sonrası SSH Verileri")
 
-    ax.axhline(y = mss, c = "red", label = "MSS")
+    ax.axhline(y = mss, c = "red", label = "Ortalama Deniz Yüzeyi")
+    plt.text(datetime.date(2020, 1, 1), mss-0.02, trend, fontsize=10)
 
     # Year-Month bilgileri için MonthLocator kullanılmalı
     ax.xaxis.set_major_locator(MonthLocator(interval=12))
