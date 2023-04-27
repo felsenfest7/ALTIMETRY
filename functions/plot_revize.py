@@ -226,7 +226,7 @@ def corr_ssh(df, title, mss, trend):
     ax.plot_date(dff["cdate_t"], dff["SSH_model"], "#0d88e6", label="Model Sonrası SSH Verileri")
 
     ax.axhline(y = mss, c = "red", label = "Ortalama Deniz Yüzeyi")
-    plt.text(datetime.date(2020, 1, 1), mss-0.02, trend, fontsize=10)
+    plt.text(datetime.date(2016, 12, 1), 21.56, trend, fontsize=10)
 
     # Year-Month bilgileri için MonthLocator kullanılmalı
     ax.xaxis.set_major_locator(MonthLocator(interval=12))
@@ -239,7 +239,10 @@ def corr_ssh(df, title, mss, trend):
     plt.title(title)
     plt.show()
 
+def excele_yolla(df, station_name, mode):
 
+    path = f"/home/furkan/deus/ALTIMETRY/processler/SPEKTRAL_ANALİZ/EXCELLER/{station_name}_{mode}_ssh_model.xlsx"
+    df.to_excel(path)
 
 
 

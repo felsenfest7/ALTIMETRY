@@ -10,7 +10,7 @@ sys.path.insert(1, "/home/furkan/PycharmProjects/pythonProject/venv/ALTIMETRY_PY
 import altimetry_functions as af
 import plot_revize as pr
 
-def harmonik_analiz2(df, title):
+def harmonik_analiz2(df, title, name, mode):
 
     l2 = df[["ssh_ales"]]  # en sonda kullanmak için aldım
     #NaN olan verilerin droplanması
@@ -131,7 +131,7 @@ def harmonik_analiz2(df, title):
     A1 = x[2]                                       # metre biriminde
     A1 = A1[0]                                      # Burada ise float halinde
     A1 = A1 * 100                                   # cm  biriminde
-    A1 = abs(round(A1, 5))                          # Yuvarlama işlemi, sanırım abs değeri alınmalı !!!!!!!
+    A1 = abs(round(A1, 4))                          # Yuvarlama işlemi, sanırım abs değeri alınmalı !!!!!!!
     A1_hata = varyans_kovaryans_matrisi[2][2]       # Hata m2 biriminde
     A1_hata = m.sqrt(A1_hata)                       # m biriminde
     A1_hata = round(A1_hata * 100, 1)               #cm biriminde yuvarlanmış değer
@@ -139,7 +139,7 @@ def harmonik_analiz2(df, title):
     B1 = x[3]                                       # metre biriminde
     B1 = B1[0]                                      # Burada ise float halinde
     B1 = B1 * 100                                   # cm  biriminde
-    B1 = abs(round(B1, 5))                          # Yuvarlama işlemi, sanırım abs değeri alınmalı !!!!!!!
+    B1 = abs(round(B1, 4))                          # Yuvarlama işlemi, sanırım abs değeri alınmalı !!!!!!!
     B1_hata = varyans_kovaryans_matrisi[3][3]       # Hata m2 biriminde
     B1_hata = m.sqrt(B1_hata)                       # m biriminde
     B1_hata = round(B1_hata * 100, 1)               # cm biriminde yuvarlanmış değer
@@ -150,7 +150,7 @@ def harmonik_analiz2(df, title):
     A2 = x[4]                                       # metre biriminde
     A2 = A2[0]                                      # Burada ise float halinde
     A2 = A2 * 100                                   # cm  biriminde
-    A2 = abs(round(A2, 5))                          # Yuvarlama işlemi, sanırım abs değeri alınmalı !!!!!!!
+    A2 = abs(round(A2, 4))                          # Yuvarlama işlemi, sanırım abs değeri alınmalı !!!!!!!
     A2_hata = varyans_kovaryans_matrisi[4][4]       # Hata m2 biriminde
     A2_hata = m.sqrt(A2_hata)                       # m biriminde
     A2_hata = round(A2_hata * 100, 1)               # cm biriminde yuvarlanmış değer
@@ -158,7 +158,7 @@ def harmonik_analiz2(df, title):
     B2 = x[5]                                       # metre biriminde
     B2 = B2[0]                                      # Burada ise float halinde
     B2 = B2 * 100                                   # cm  biriminde
-    B2 = abs(round(B2, 5))                          # Yuvarlama işlemi, sanırım abs değeri alınmalı !!!!!!!
+    B2 = abs(round(B2, 4))                          # Yuvarlama işlemi, sanırım abs değeri alınmalı !!!!!!!
     B2_hata = varyans_kovaryans_matrisi[5][5]       # Hata m2 biriminde
     B2_hata = m.sqrt(B2_hata)                       # m biriminde
     B2_hata = round(B2_hata * 100, 1)               # cm biriminde yuvarlanmış değer
@@ -180,8 +180,10 @@ def harmonik_analiz2(df, title):
     plota_trend = f"Trend: {trend} ± {trend_hata} mm/yıl"
 
     #Plotun çizdirilmesi
-    plot = pr.corr_ssh(df_merged, f"{title} Altimetri Verileri", mss, plota_trend)
+    plot = pr.corr_ssh(df_merged, f"{title} SSH Modeli", mss, plota_trend)
 
+    #En sonunda verileri excele atalım
+    pr.excele_yolla(df_merged, name, mode)
 
 
 
