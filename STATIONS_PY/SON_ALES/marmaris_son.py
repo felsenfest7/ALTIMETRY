@@ -19,6 +19,7 @@ import plot as pl
 import trend_analysis as ta
 import plot_revize as pr
 import altimetry_functions as af
+import harmonik_analiz as ha
 #-----------------------------------------------------------------------------------------------------------------------
 #MARMARİS ALES
 #Verinin okunması
@@ -62,17 +63,18 @@ filtered_idw_ales = filtered_idw_ales[filtered_idw_ales["ssh_idw"] < 25.30]
 filtered_idw_ales = af.dates_interpolation(filtered_idw_ales)
 
 #Verilerin çizdirilmesi
-aylik_ssh_plot = pr.plot_ssh_aylik_yeni(filtered_idw_ales, "Marmaris Aylık Altimetre Verileri")
+#aylik_ssh_plot = pr.plot_ssh_aylik_yeni(filtered_idw_ales, "Marmaris Aylık Altimetre Verileri")
 
 #nx3'lük matrisin oluşturulması
 wish = af.df2newdf(filtered_idw_ales)
 
 #Excele aktarılması
-wish_table = af.df2excel3(wish, "ALES3", "MARMARİS", "marmaris_ssh_weight")
+#wish_table = af.df2excel3(wish, "ALES3", "MARMARİS", "marmaris_ssh_weight")
 
+#print(boylam_ales, enlem_ales)
 
-
-
+haa = ha.harmonik_analiz2(wish, "Marmaris", "marmaris", "ales")
+print(haa)
 
 
 

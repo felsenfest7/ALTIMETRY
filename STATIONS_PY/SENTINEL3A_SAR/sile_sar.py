@@ -19,6 +19,7 @@ import plot as pl
 import trend_analysis as ta
 import plot_revize as pr
 import altimetry_functions as af
+import harmonik_analiz as ha
 #-----------------------------------------------------------------------------------------------------------------------
 #BOZYAZI GELENEKSEL VERİLER
 #Verinin okunması
@@ -47,10 +48,14 @@ filtered_idw_gel = af.iqr(gel_idw_sar)
 filtered_idw_gel = rmn.dates_interpolation(filtered_idw_gel)
 
 #Verilerin çizdirilmesi
-gel_aylik_ssh_plot = pr.plot_ssh_aylik_yeni(filtered_idw_gel, "Şile SAR Altimetre Verileri")
+#gel_aylik_ssh_plot = pr.plot_ssh_aylik_yeni(filtered_idw_gel, "Şile SAR Altimetre Verileri")
 
 #nx3'lük matrisin oluşturulması
 wish = af.df2newdf_gel(filtered_idw_gel)
 
 #Excele aktarılması
 wish_table = af.df2excel3(wish, "ALES3", "SILE", "sile_sar_ssh_weight")
+
+haa = ha.harmonik_analiz2(wish, "Şile SAR", "sile", "sar")
+print(haa)
+
